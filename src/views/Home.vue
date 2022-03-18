@@ -1,10 +1,12 @@
 <template>
+    <div v-if = "user">
     <NavBar/>
     <h3>This is Home Page</h3>
   <WelcomeCpp/>
   <AddCoin @added="change"/>
   <ProfitDisplay :key = "refreshComp" />
   <LogOut/>
+  </div>
 
 </template>
 
@@ -14,9 +16,24 @@ import ProfitDisplay from '../components/ProfitDisplay.vue'
 import AddCoin from '../components/AddCoin.vue'
 import NavBar from '../components/NavBar.vue'
 import LogOut from '../components/LogOut.vue'
+import {getAuth, onAuthStateChanged} from "firebase/auth";
 
 export default {
   name: 'App',
+  data() {
+      return {
+          user : false,
+          refreshComp:0
+      }
+  },
+  mounted() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            this.user = user;
+        }
+    })
+    },
   components: { 
     ProfitDisplay,
     WelcomeCpp,
@@ -24,11 +41,7 @@ export default {
     NavBar,
     LogOut
     },
-  data() {
-    return {
-      refreshComp:0
-    }
-  },
+
   methods:{
     change() {
       this.refreshComp += 1

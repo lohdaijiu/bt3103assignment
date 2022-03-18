@@ -6,15 +6,27 @@
         Enter coin details and get real time Profit and Loss update of your portfolio
     </div>
   </div>
-  <button @click = "googleSignIn()">Google Sign In</button>
+  <button @click = "googleSignIn()">Google Sign In</button> <br> <br>
+
+    <p><input type="email" placeholder="Email" v-model="email" /></p>
+    <p><input type="password" placeholder="Password" v-model="password" /></p>
+    <p><button @click="login">Submit</button></p>
+
 </template>
 
 <script>
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider , signInWithEmailAndPassword} from "firebase/auth";
 
 
 export default {
     name:"Login",
+
+    data() {
+        return {
+            email: "",
+            password: "",
+        }
+    },
 
     methods : {
         googleSignIn() {
@@ -22,12 +34,25 @@ export default {
             const provider = new GoogleAuthProvider();
             signInWithPopup(auth, provider)
             .then(
-            this.$router.push('/about')
+            this.$router.push('/home')
             ).catch((error) => {
             console.log(error)
             });
 
         },
+        async login() {
+
+
+            try {
+                await signInWithEmailAndPassword(getAuth(), this.email, this.password)
+                .catch((error) => {
+                alert(error.message)
+                .then(this.$router.push("/home"));
+                });
+            } catch {
+                console.log("error")
+            }
+    },
 
     }    
 }
