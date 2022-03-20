@@ -92,7 +92,9 @@ export default {
     async function deleteC(coin) {
         alert("deleting")
         var x = coin
-        await deleteDoc(doc(db, "Portfolio", x))
+        const auth = getAuth();
+        const user = auth.currentUser.email;
+        await deleteDoc(doc(db, String(user), x))
         let tb = document.getElementById("table")
         while (tb.rows.length > 1) {
             tb.deleteRow(1)
